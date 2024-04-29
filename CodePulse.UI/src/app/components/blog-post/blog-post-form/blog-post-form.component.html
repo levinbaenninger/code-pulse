@@ -1,0 +1,90 @@
+<div class="container">
+  <h1 class="mt-3">Add Blog Post</h1>
+
+  <hr />
+
+  <form class="row g-3">
+    <div class="col-md-4">
+      <label for="blogPostTitle" class="form-label">Title</label>
+      <input
+        type="text"
+        id="blogPostTitle"
+        name="blogPostTitle"
+        class="form-control"
+        placeholder="How HTML works behind the scenes"
+      />
+    </div>
+    <div class="col-md-8">
+      <label for="blogPostDescription" class="form-label">Description</label>
+      <input
+        class="form-control"
+        id="blogPostDescription"
+        name="blogPostDescription"
+        placeholder="In this blog post, we will learn how HTML works behind the scenes. We will discuss the DOM, CSSOM, and the rendering process."
+      />
+    </div>
+    <div class="col-md-12">
+      <label for="blogPostUrlHandle" class="form-label">URL Handle</label>
+      <div class="input-group">
+        <span class="input-group-text">https://codepulse.io/blog/</span>
+        <input
+          type="text"
+          id="blogPostUrlHandle"
+          name="blogPostUrlHandle"
+          class="form-control"
+          placeholder="html-behind-the-scenes"
+        />
+      </div>
+    </div>
+    <div class="col-12">
+      <label for="blogPostContent">Content</label>
+      <textarea
+        class="form-control"
+        id="blogPostContent"
+        name="blogPostContent"
+        rows="10"
+        placeholder=""
+      ></textarea>
+    </div>
+    <div class="col-md-5">
+      <label for="blogPostFeaturedImageUrl">Featured Image URL</label>
+      <input
+        type="text"
+        id="blogPostFeaturedImageUrl"
+        name="blogPostFeaturedImageUrl"
+        class="form-control"
+        placeholder="https://codepulse.io/assets/images/html-behind-the-scenes.jpg"
+      />
+    </div>
+    <div class="col-md-3">
+      <label for="blogPostDatePublished">Date Published</label>
+      <input
+        type="date"
+        id="blogPostDatePublished"
+        name="blogPostDatePublished"
+        class="form-control"
+      />
+    </div>
+    <div class="col-md-3">
+      <label for="blogPostAuthor">Author</label>
+      <input
+        type="text"
+        id="blogPostAuthor"
+        name="blogPostAuthor"
+        class="form-control"
+        placeholder="John Doe"
+      />
+    </div>
+    <div class="col-md-1">
+      <label for="blogPostIsVisible">Public</label>
+      <div class="mt-2 form-switch">
+        <input
+          type="checkbox"
+          id="blogPostIsVisible"
+          name="blogPostIsVisible"
+          class="form-check-input"
+        />
+      </div>
+    </div>
+  </form>
+</div>
