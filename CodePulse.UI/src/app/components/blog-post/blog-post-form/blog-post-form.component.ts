@@ -7,13 +7,14 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MarkdownModule } from 'ngx-markdown';
 import { Subscription } from 'rxjs';
 import { BlogPostService } from '../../../services/blog-post.service';
 
 @Component({
   selector: 'app-blog-post-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MarkdownModule],
   templateUrl: './blog-post-form.component.html',
   styleUrl: './blog-post-form.component.scss',
 })

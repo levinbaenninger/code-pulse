@@ -40,18 +40,33 @@
       </div>
     </div>
     <div class="col-12">
-      <label for="blogPostContent">Content</label>
-      <textarea
-        class="form-control"
-        id="blogPostContent"
-        name="blogPostContent"
-        rows="10"
-        placeholder=""
-        formControlName="content"
-      ></textarea>
+      <label for="blogPostContent" class="form-label">Content</label>
+      <div class="d-flex flex-row gap-4">
+        <div class="col-6">
+          <textarea
+            name="blogPostContent"
+            id="blogPostContent"
+            class="form-control"
+            formControlName="content"
+          ></textarea>
+        </div>
+        <div class="col-6 markdown-preview">
+          <markdown [data]="blogPostForm.get('content')?.value"></markdown>
+        </div>
+      </div>
     </div>
-    <div class="col-md-5">
-      <label for="blogPostFeaturedImageUrl">Featured Image URL</label>
+    <div class="col-12">
+      <label for="blogPostFeaturedImageUrl" class="form-label"
+        >Featured Image URL</label
+      >
+
+      <div *ngIf="blogPostForm.get('featuredImageUrl')?.value !== ''" class="">
+        <img
+          [src]="blogPostForm.get('featuredImageUrl')?.value"
+          class="preview-image mb-2 img-thumbnail"
+        />
+      </div>
+
       <input
         type="text"
         id="blogPostFeaturedImageUrl"
@@ -62,7 +77,9 @@
       />
     </div>
     <div class="col-md-3">
-      <label for="blogPostDatePublished">Date Published</label>
+      <label for="blogPostDatePublished" class="form-label"
+        >Date Published</label
+      >
       <input
         type="date"
         id="blogPostDatePublished"
@@ -72,7 +89,7 @@
       />
     </div>
     <div class="col-md-3">
-      <label for="blogPostAuthor">Author</label>
+      <label for="blogPostAuthor" class="form-label">Author</label>
       <input
         type="text"
         id="blogPostAuthor"
@@ -83,7 +100,7 @@
       />
     </div>
     <div class="col-md-1">
-      <label for="blogPostIsVisible">Public?</label>
+      <label for="blogPostIsVisible" class="form-label">Public?</label>
       <div class="mt-2 form-switch">
         <input
           type="checkbox"
