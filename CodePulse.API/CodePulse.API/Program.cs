@@ -13,26 +13,27 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("CodePulseConnectionString"));
+	options.UseSqlServer(builder.Configuration.GetConnectionString("CodePulseConnectionStringBYOD"));
 });
 builder.Services.AddScoped<ICategoryRepository, CategoryRespository>();
+builder.Services.AddScoped<IBlogPostRespository, BlogPostRepository>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
 app.UseCors(options =>
 {
-    options.AllowAnyOrigin();
-    options.AllowAnyMethod();
-    options.AllowAnyHeader();
+	options.AllowAnyOrigin();
+	options.AllowAnyMethod();
+	options.AllowAnyHeader();
 });
 
 app.UseAuthorization();
