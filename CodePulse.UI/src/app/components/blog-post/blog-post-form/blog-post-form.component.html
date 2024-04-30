@@ -3,7 +3,7 @@
 
   <hr />
 
-  <form class="row g-3">
+  <form class="row g-3" [formGroup]="blogPostForm" (ngSubmit)="onFormSubmit()">
     <div class="col-md-4">
       <label for="blogPostTitle" class="form-label">Title</label>
       <input
@@ -12,6 +12,7 @@
         name="blogPostTitle"
         class="form-control"
         placeholder="How HTML works behind the scenes"
+        formControlName="title"
       />
     </div>
     <div class="col-md-8">
@@ -21,6 +22,7 @@
         id="blogPostDescription"
         name="blogPostDescription"
         placeholder="In this blog post, we will learn how HTML works behind the scenes. We will discuss the DOM, CSSOM, and the rendering process."
+        formControlName="description"
       />
     </div>
     <div class="col-md-12">
@@ -33,6 +35,7 @@
           name="blogPostUrlHandle"
           class="form-control"
           placeholder="html-behind-the-scenes"
+          formControlName="urlHandle"
         />
       </div>
     </div>
@@ -44,6 +47,7 @@
         name="blogPostContent"
         rows="10"
         placeholder=""
+        formControlName="content"
       ></textarea>
     </div>
     <div class="col-md-5">
@@ -54,6 +58,7 @@
         name="blogPostFeaturedImageUrl"
         class="form-control"
         placeholder="https://codepulse.io/assets/images/html-behind-the-scenes.jpg"
+        formControlName="featuredImageUrl"
       />
     </div>
     <div class="col-md-3">
@@ -63,6 +68,7 @@
         id="blogPostDatePublished"
         name="blogPostDatePublished"
         class="form-control"
+        formControlName="datePublished"
       />
     </div>
     <div class="col-md-3">
@@ -73,17 +79,37 @@
         name="blogPostAuthor"
         class="form-control"
         placeholder="John Doe"
+        formControlName="author"
       />
     </div>
     <div class="col-md-1">
-      <label for="blogPostIsVisible">Public</label>
+      <label for="blogPostIsVisible">Public?</label>
       <div class="mt-2 form-switch">
         <input
           type="checkbox"
           id="blogPostIsVisible"
           name="blogPostIsVisible"
           class="form-check-input"
+          formControlName="isVisible"
         />
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="mt-3">
+        <button
+          type="submit"
+          class="btn btn-success me-2"
+          [disabled]="this.blogPostForm.invalid"
+        >
+          Save
+        </button>
+        <button type="button" class="btn btn-primary me-2" (click)="onReset()">
+          Reset form
+        </button>
+        <button *ngIf="this.id" class="btn btn-danger" (click)="onDelete()">
+          Delete
+        </button>
       </div>
     </div>
   </form>

@@ -5,5 +5,6 @@ import { BlogPostListComponent } from './blog-post-list/blog-post-list.component
 export const blogPostRoutes: Routes = [
   { path: '', component: BlogPostListComponent },
   { path: 'new', component: BlogPostFormComponent },
+  { path: ':id/edit', component: BlogPostFormComponent },
   { path: '**', redirectTo: '/error/404' },
 ];

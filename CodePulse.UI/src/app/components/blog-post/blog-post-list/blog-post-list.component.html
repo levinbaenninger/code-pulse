@@ -1,9 +1,33 @@
 <div class="container">
   <h1 class="mt-3">Blogs</h1>
 
-   <hr />
+  <hr />
 
   <div class="d-flex justify-content-end mt-3">
-    <a [routerLink]="['new']" class="btn btn-primary">Add Blog Post</a> 
+    <a [routerLink]="['new']" class="btn btn-primary">Add Blog Post</a>
+  </div>
+
+  <div *ngIf="blogPosts">
+    <table class="table table-bordered mt-3">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Is Public?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let blogPost of blogPosts">
+          <td>{{ blogPost.title }}</td>
+          <td>{{ blogPost.description }}</td>
+          <td>{{ blogPost.isVisible }}</td>
+          <td>
+            <button class="btn btn-light" [routerLink]="[blogPost.id, 'edit']">
+              Edit
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
