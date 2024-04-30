@@ -11,10 +11,12 @@ namespace CodePulse.API.Controllers
 	public class BlogPostsController : ControllerBase
 	{
 		private readonly IBlogPostRespository _blogPostRepository;
+		private readonly ICategoryRepository _categoryRepository;
 
-		public BlogPostsController(IBlogPostRespository blogPostRepository)
+		public BlogPostsController(IBlogPostRespository blogPostRepository, ICategoryRepository categoryRepository)
 		{
 			_blogPostRepository = blogPostRepository;
+			_categoryRepository = categoryRepository;
 		}
 
 		[HttpGet]
@@ -36,7 +38,7 @@ namespace CodePulse.API.Controllers
 					UrlHandle = blogPost.UrlHandle,
 					DatePublished = blogPost.DatePublished,
 					Author = blogPost.Author,
-					IsVisible = blogPost.IsVisible
+					IsVisible = blogPost.IsVisible,
 				});
 			}
 
@@ -84,10 +86,16 @@ namespace CodePulse.API.Controllers
 				UrlHandle = request.UrlHandle,
 				DatePublished = request.DatePublished,
 				Author = request.Author,
-				IsVisible = request.IsVisible
+				IsVisible = request.IsVisible,
+				Categories = new List<Category>()
 			};
 
-			await _blogPostRepository.CreateAsync(blogPost);
+			foreach (var categoryGuid in request.Categories)
+			{
+				var existingCategory = await _categoryRepository.GetByIdAsync(categoryGuid);
+			}
+
+			blogPost = await _blogPostRepository.CreateAsync(blogPost);
 
 			// Map Domain Model to DTO
 			var response = new BlogPostDto
