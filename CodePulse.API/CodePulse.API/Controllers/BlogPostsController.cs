@@ -39,6 +39,12 @@ namespace CodePulse.API.Controllers
 					DatePublished = blogPost.DatePublished,
 					Author = blogPost.Author,
 					IsVisible = blogPost.IsVisible,
+					Categories = blogPost.Categories.Select(c => new CategoryDto
+					{
+						Id = c.Id,
+						Name = c.Name,
+						UrlHandle = c.UrlHandle
+					}).ToList()
 				});
 			}
 
@@ -93,6 +99,13 @@ namespace CodePulse.API.Controllers
 			foreach (var categoryGuid in request.Categories)
 			{
 				var existingCategory = await _categoryRepository.GetByIdAsync(categoryGuid);
+
+				if (existingCategory == null)
+				{
+					return BadRequest($"Category with ID {categoryGuid} does not exist.");
+				}
+
+				blogPost.Categories.Add(existingCategory);
 			}
 
 			blogPost = await _blogPostRepository.CreateAsync(blogPost);
@@ -108,7 +121,13 @@ namespace CodePulse.API.Controllers
 				UrlHandle = blogPost.UrlHandle,
 				DatePublished = blogPost.DatePublished,
 				Author = blogPost.Author,
-				IsVisible = blogPost.IsVisible
+				IsVisible = blogPost.IsVisible,
+				Categories = blogPost.Categories.Select(c => new CategoryDto
+				{
+					Id = c.Id,
+					Name = c.Name,
+					UrlHandle = c.UrlHandle
+				}).ToList()
 			};
 
 			return CreatedAtAction(nameof(GetBlogPost), new { id = blogPost.Id }, response);
