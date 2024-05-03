@@ -20,7 +20,7 @@ namespace CodePulse.API.Repository.Implementation
 		}
 		public async Task<BlogPost?> GetByIdAsync(Guid id)
 		{
-			return await _db.BlogPosts.FindAsync(id);
+			return await _db.BlogPosts.Include(bp => bp.Categories).FirstOrDefaultAsync(bp => bp.Id == id);
 		}
 
 		public async Task<BlogPost> CreateAsync(BlogPost blogPost)

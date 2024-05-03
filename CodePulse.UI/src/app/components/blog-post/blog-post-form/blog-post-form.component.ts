@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
+  FormArray,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
@@ -9,7 +10,9 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
 import { Subscription } from 'rxjs';
+import { Category } from '../../../models/category.model';
 import { BlogPostService } from '../../../services/blog-post.service';
+import { CategoryService } from '../../../services/category.service';
 
 @Component({
   selector: 'app-blog-post-form',
@@ -20,17 +23,20 @@ import { BlogPostService } from '../../../services/blog-post.service';
 })
 export class BlogPostFormComponent implements OnInit, OnDestroy {
   blogPostForm!: FormGroup;
+  id?: string;
+  categories?: Category[];
   private idSubscription?: Subscription;
   private createSubscription?: Subscription;
   private deleteSubscription?: Subscription;
   private updateSubscription?: Subscription;
-  id?: string;
+  private categoriesSubscription?: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
     private blogPostService: BlogPostService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit(): void {
@@ -43,6 +49,7 @@ export class BlogPostFormComponent implements OnInit, OnDestroy {
       datePublished: ['', Validators.required],
       author: ['', Validators.required],
       isVisible: [true, Validators.required],
+      categories: this.formBuilder.array([this.formBuilder.control('')]),
     });
 
     this.idSubscription = this.activatedRoute.params.subscribe((params) => {
@@ -59,10 +66,17 @@ export class BlogPostFormComponent implements OnInit, OnDestroy {
             datePublished: blogPost.datePublished,
             author: blogPost.author,
             isVisible: blogPost.isVisible,
+            categories: blogPost.categories,
           });
         });
       }
     });
+
+    this.categoriesSubscription = this.categoryService
+      .getCategories()
+      .subscribe((categories) => {
+        this.categories = categories;
+      });
   }
 
   ngOnDestroy(): void {
@@ -70,6 +84,7 @@ export class BlogPostFormComponent implements OnInit, OnDestroy {
     this.createSubscription?.unsubscribe();
     this.deleteSubscription?.unsubscribe();
     this.updateSubscription?.unsubscribe();
+    this.categoriesSubscription?.unsubscribe();
   }
 
   onFormSubmit(): void {
@@ -105,5 +120,17 @@ export class BlogPostFormComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.router.navigate(['/admin/blog-posts']);
       });
+  }
+
+  get categoryControls() {
+    return this.blogPostForm.get('categories') as FormArray;
+  }
+
+  addCategory(): void {
+    this.categoryControls?.push(this.formBuilder.control(''));
+  }
+
+  removeCategory(index: number): void {
+    this.categoryControls?.removeAt(index);
   }
 }

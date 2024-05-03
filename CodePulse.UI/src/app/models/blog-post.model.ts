@@ -1,3 +1,5 @@
+import { Category } from './category.model';
+
 export interface BlogPost {
   id: string;
   title: string;
@@ -8,4 +10,5 @@ export interface BlogPost {
   datePublished: Date;
   author: string;
   isVisible: boolean;
+  categories: Category[];
 }

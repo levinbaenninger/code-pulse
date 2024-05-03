@@ -73,7 +73,13 @@ namespace CodePulse.API.Controllers
 				UrlHandle = existingCategory.UrlHandle,
 				DatePublished = existingCategory.DatePublished,
 				Author = existingCategory.Author,
-				IsVisible = existingCategory.IsVisible
+				IsVisible = existingCategory.IsVisible,
+				Categories = existingCategory.Categories.Select(c => new CategoryDto
+				{
+                    Id = c.Id,
+                    Name = c.Name,
+                    UrlHandle = c.UrlHandle
+                }).ToList()
 			};
 
 			return Ok(response);
@@ -148,8 +154,21 @@ namespace CodePulse.API.Controllers
 				UrlHandle = request.UrlHandle,
 				DatePublished = request.DatePublished,
 				Author = request.Author,
-				IsVisible = request.IsVisible
+				IsVisible = request.IsVisible,
+				Categories = new List<Category>()
 			};
+
+			foreach (var category in request.Categories)
+			{
+				var existingCategory = await _categoryRepository.GetByIdAsync(category);
+
+				if (existingCategory == null)
+				{
+                    return BadRequest($"Category with ID {category} does not exist.");
+                }
+
+				blogPost.Categories.Add(existingCategory);
+			}
 
 			blogPost = await _blogPostRepository.UpdateAsync(blogPost);
 
