@@ -13,7 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-	options.UseSqlServer(builder.Configuration.GetConnectionString("CodePulseConnectionStringBuhler"));
+	options.UseNpgsql(builder.Configuration.GetConnectionString("CodePulseConnectionString"));
 });
 builder.Services.AddScoped<ICategoryRepository, CategoryRespository>();
 builder.Services.AddScoped<IBlogPostRespository, BlogPostRepository>();
