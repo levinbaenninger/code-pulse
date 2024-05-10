@@ -1,6 +1,12 @@
-textarea {
+.description-textarea {
+  height: 100px;
+  max-height: 100px;
+}
+
+.content-textarea {
   height: 350px;
   max-height: 350px;
+  font-family: monospace;
 }
 
 .markdown-preview {

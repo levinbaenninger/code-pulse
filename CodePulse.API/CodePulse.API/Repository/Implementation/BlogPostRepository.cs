@@ -33,7 +33,8 @@ namespace CodePulse.API.Repository.Implementation
 
 		public async Task<BlogPost?> UpdateAsync(BlogPost blogPost)
 		{
-			var existingBlogPost = await _db.BlogPosts.FindAsync(blogPost.Id);
+			var existingBlogPost =
+				await _db.BlogPosts.Include(bp => bp.Categories).FirstOrDefaultAsync(bp => bp.Id == blogPost.Id);
 
 			if (existingBlogPost != null)
 			{
@@ -45,6 +46,7 @@ namespace CodePulse.API.Repository.Implementation
 				existingBlogPost.DatePublished = blogPost.DatePublished;
 				existingBlogPost.Author = blogPost.Author;
 				existingBlogPost.IsVisible = blogPost.IsVisible;
+				existingBlogPost.Categories = blogPost.Categories;
 
 				await _db.SaveChangesAsync();
 				return blogPost;

@@ -41,23 +41,39 @@ export class BlogPostFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.blogPostForm = this.formBuilder.group({
-      title: ['', [Validators.required, Validators.maxLength(100)]],
-      description: ['', [Validators.required, Validators.maxLength(500)]],
+      title: ['', Validators.required],
+      description: ['', Validators.required],
       urlHandle: ['', Validators.required],
       content: ['', Validators.required],
       featuredImageUrl: ['', Validators.required],
       datePublished: ['', Validators.required],
       author: ['', Validators.required],
       isVisible: [true, Validators.required],
-      categories: this.formBuilder.array([this.formBuilder.control('')]),
+      categories: this.formBuilder.array([
+        this.formBuilder.control('', Validators.required),
+      ]),
     });
+
+    this.categoriesSubscription = this.categoryService
+      .getCategories()
+      .subscribe((categories) => {
+        this.categories = categories;
+      });
 
     this.idSubscription = this.activatedRoute.params.subscribe((params) => {
       this.id = params['id'];
 
       if (this.id) {
         this.blogPostService.getBlogPost(this.id).subscribe((blogPost) => {
-          this.blogPostForm.setValue({
+          this.categoryControls.clear();
+          blogPost.categories.forEach((category) => {
+            this.addCategory(category.id);
+          });
+
+          // Convert date to format for frontend
+          blogPost.datePublished = new Date(blogPost.datePublished).toISOString().split('T')[0];
+
+          this.blogPostForm.patchValue({
             title: blogPost.title,
             description: blogPost.description,
             urlHandle: blogPost.urlHandle,
@@ -66,17 +82,10 @@ export class BlogPostFormComponent implements OnInit, OnDestroy {
             datePublished: blogPost.datePublished,
             author: blogPost.author,
             isVisible: blogPost.isVisible,
-            categories: blogPost.categories,
           });
         });
       }
     });
-
-    this.categoriesSubscription = this.categoryService
-      .getCategories()
-      .subscribe((categories) => {
-        this.categories = categories;
-      });
   }
 
   ngOnDestroy(): void {
@@ -96,17 +105,18 @@ export class BlogPostFormComponent implements OnInit, OnDestroy {
       this.updateSubscription = this.blogPostService
         .updateBlogPost(this.id, this.blogPostForm.value)
         .subscribe(() => this.router.navigate(['/admin/blog-posts']));
-      return;
+    } else {
+      this.createSubscription = this.blogPostService
+        .createBlogPost(this.blogPostForm.value)
+        .subscribe(() => {
+          this.router.navigate(['/admin/blog-posts']);
+        });
     }
-
-    this.createSubscription = this.blogPostService
-      .createBlogPost(this.blogPostForm.value)
-      .subscribe(() => {
-        this.router.navigate(['/admin/blog-posts']);
-      });
   }
 
   onReset(): void {
+    this.categoryControls.clear();
+    this.addCategory();
     this.blogPostForm.reset();
   }
 
@@ -126,8 +136,10 @@ export class BlogPostFormComponent implements OnInit, OnDestroy {
     return this.blogPostForm.get('categories') as FormArray;
   }
 
-  addCategory(): void {
-    this.categoryControls?.push(this.formBuilder.control(''));
+  addCategory(categoryId?: string): void {
+    this.categoryControls?.push(
+      this.formBuilder.control(categoryId || '', Validators.required)
+    );
   }
 
   removeCategory(index: number): void {
