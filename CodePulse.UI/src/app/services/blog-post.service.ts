@@ -25,9 +25,20 @@ export class BlogPostService {
     );
   }
 
-  getBlogPost(id: string): Observable<BlogPost> {
+  getBlogPostById(id: string): Observable<BlogPost> {
     return this.http
       .get<BlogPost>(`${environment.apiUrl}/${this.url}/${id}`)
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          this.errorHandleService.handleError(error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  getBlogPostByUrl(url: string): Observable<BlogPost> {
+    return this.http
+      .get<BlogPost>(`${environment.apiUrl}/${this.url}/${url}`)
       .pipe(
         catchError((error: HttpErrorResponse) => {
           this.errorHandleService.handleError(error);

@@ -53,7 +53,7 @@ namespace CodePulse.API.Controllers
 
 		[HttpGet]
 		[Route("{id:guid}")]
-		public async Task<IActionResult> GetBlogPost([FromRoute] Guid id)
+		public async Task<IActionResult> GetBlogPostById([FromRoute] Guid id)
 		{
 			var existingCategory = await _blogPostRepository.GetByIdAsync(id);
 
@@ -76,10 +76,44 @@ namespace CodePulse.API.Controllers
 				IsVisible = existingCategory.IsVisible,
 				Categories = existingCategory.Categories.Select(c => new CategoryDto
 				{
-                    Id = c.Id,
-                    Name = c.Name,
-                    UrlHandle = c.UrlHandle
-                }).ToList()
+					Id = c.Id,
+					Name = c.Name,
+					UrlHandle = c.UrlHandle
+				}).ToList()
+			};
+
+			return Ok(response);
+		}
+
+		[HttpGet]
+		[Route("{urlHandle}")]
+		public async Task<IActionResult> GetBlogsPostByUrlHandle([FromRoute] string urlHandle)
+		{
+			var existingCategory = await _blogPostRepository.GetByUrlHandleAsync(urlHandle);
+
+			if (existingCategory == null)
+			{
+				return NotFound();
+			}
+
+			// Map Domain Model to DTO
+			var response = new BlogPostDto
+			{
+				Id = existingCategory.Id,
+				Title = existingCategory.Title,
+				Description = existingCategory.Description,
+				Content = existingCategory.Content,
+				FeaturedImageUrl = existingCategory.FeaturedImageUrl,
+				UrlHandle = existingCategory.UrlHandle,
+				DatePublished = existingCategory.DatePublished,
+				Author = existingCategory.Author,
+				IsVisible = existingCategory.IsVisible,
+				Categories = existingCategory.Categories.Select(c => new CategoryDto
+				{
+					Id = c.Id,
+					Name = c.Name,
+					UrlHandle = c.UrlHandle
+				}).ToList()
 			};
 
 			return Ok(response);
@@ -136,7 +170,7 @@ namespace CodePulse.API.Controllers
 				}).ToList()
 			};
 
-			return CreatedAtAction(nameof(GetBlogPost), new { id = blogPost.Id }, response);
+			return CreatedAtAction(nameof(GetBlogPostById), new { id = blogPost.Id }, response);
 		}
 
 		[HttpPut]
@@ -164,8 +198,8 @@ namespace CodePulse.API.Controllers
 
 				if (existingCategory == null)
 				{
-                    return BadRequest($"Category with ID {category} does not exist.");
-                }
+					return BadRequest($"Category with ID {category} does not exist.");
+				}
 
 				blogPost.Categories.Add(existingCategory);
 			}

@@ -7,7 +7,7 @@
     <a [routerLink]="['new']" class="btn btn-primary">Add Blog Post</a>
   </div>
 
-  <div *ngIf="blogPosts">
+  <ng-container *ngIf="blogPosts">
     <table class="table table-bordered mt-3">
       <thead>
         <tr>
@@ -40,5 +40,5 @@
         </tr>
       </tbody>
     </table>
-  </div>
+  </ng-container>
 </div>

@@ -2,6 +2,7 @@
 using CodePulse.API.Models.Domain;
 using CodePulse.API.Models.DTO;
 using CodePulse.API.Repository.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,8 @@ namespace CodePulse.API.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> GetCategories()
+		[Authorize]
+		public async Task<IActionResult> GetAllCategories()
 		{
 			var categories = await _categoryRepository.GetAllAsync();
 
@@ -40,7 +42,7 @@ namespace CodePulse.API.Controllers
 
 		[HttpGet]
 		[Route("{id:guid}")]
-		public async Task<IActionResult> GetCategory([FromRoute] Guid id)
+		public async Task<IActionResult> GetCategoryById([FromRoute] Guid id)
 		{
 			var existingCategory = await _categoryRepository.GetByIdAsync(id);
 
@@ -80,7 +82,7 @@ namespace CodePulse.API.Controllers
 				UrlHandle = category.UrlHandle
 			};
 
-			return CreatedAtAction(nameof(GetCategory), new { id = category.Id }, response);
+			return CreatedAtAction(nameof(GetCategoryById), new { id = category.Id }, response);
 		}
 
 		[HttpPut]

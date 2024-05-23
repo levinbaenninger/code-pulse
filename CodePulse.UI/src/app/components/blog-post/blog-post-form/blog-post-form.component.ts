@@ -64,14 +64,16 @@ export class BlogPostFormComponent implements OnInit, OnDestroy {
       this.id = params['id'];
 
       if (this.id) {
-        this.blogPostService.getBlogPost(this.id).subscribe((blogPost) => {
+        this.blogPostService.getBlogPostById(this.id).subscribe((blogPost) => {
           this.categoryControls.clear();
           blogPost.categories.forEach((category) => {
             this.addCategory(category.id);
           });
 
           // Convert date to format for frontend
-          blogPost.datePublished = new Date(blogPost.datePublished).toISOString().split('T')[0];
+          blogPost.datePublished = new Date(blogPost.datePublished)
+            .toISOString()
+            .split('T')[0];
 
           this.blogPostForm.patchValue({
             title: blogPost.title,
