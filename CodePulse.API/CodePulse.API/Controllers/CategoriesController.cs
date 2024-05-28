@@ -20,7 +20,6 @@ namespace CodePulse.API.Controllers
 		}
 
 		[HttpGet]
-		[Authorize]
 		public async Task<IActionResult> GetAllCategories()
 		{
 			var categories = await _categoryRepository.GetAllAsync();
